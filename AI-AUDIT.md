@@ -37,9 +37,9 @@ _Role is one of: Reviewer, Archaeologist, Student Researcher, Reproducibility Ch
 
 | 2 | 10/7/2026 | Reviewer | Produced an image for our quanta correspondence reflecting the process of LSB steganography with PLS and AES | OK | Yes | Compared it against the paper description of the process | Widyane Kasbi |
 
-| 3 |
+| 3 | 11/15/2026 | Reproducibility Checker | The AI’s first version mapped pixels incorrectly for non-square images | CW | yes | Checked with a 4×3 image test; corrected the mapping and added a test | Widyane Kasbi
 
-| 4 |
+| 4 | 11/21/2026 | Reproducibility Checker | The AI-assisted runner compares five images and checks text/PLS recovery | OK | yes | Four tests passed; all five images passed recovery; repeated outputs matched. The paper’s MSE/PSNR numbers still differ, and the cause is unresolved | Widyane Kasbi
 
 | 5 |
 

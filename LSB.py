@@ -16,50 +16,82 @@ def DataListInBit(data):
     return dataBits
 
 
-def PLSgen(row, col, lenEncodedText):
-    new = []
-    for i in range(row * col):
-        new.append(i)
+def PLSgen(row, col, lenEncodedText, seed=None):
+    requiredPixels = lenEncodedText * 3
+    if requiredPixels > row * col:
+        raise ValueError("The encoded text is too large for this image.")
+
+    new = list(range(row * col))
+    rng = random.Random(seed)
     for i in range(len(new) - 1, 0, -1):
-        j = random.randint(0, i + 1)
+        j = rng.randrange(i + 1)
         new[i], new[j] = new[j], new[i]
-    for i in range(lenEncodedText * 3):
-        PLS.append(new[i])
-    pixelLocaterSequence = np.array(PLS)
-    np.savetxt("pls.txt", pixelLocaterSequence, delimiter="\t")
+    PLS.clear()
+    PLS.extend(new[:requiredPixels])
+    return PLS.copy()
+
+
+def embed_text(image, encodedText, pls):
+    if image.mode != 'RGB':
+        raise ValueError("The cover image must be RGB.")
+    if len(pls) != len(encodedText) * 3:
+        raise ValueError("The PLS must contain three pixel locations per character.")
+
+    width, _ = image.size
+    stegoImage = image.copy()
+    dataBits = DataListInBit(encodedText)
+
+    for charIndex, bits in enumerate(dataBits):
+        pixelLocations = pls[charIndex * 3:charIndex * 3 + 3]
+        pixels = []
+        for location in pixelLocations:
+            x = int(location) % width
+            y = int(location) // width
+            pixels.append(list(stegoImage.getpixel((x, y))))
+
+        values = [value for pixel in pixels for value in pixel]
+        for bitIndex, bit in enumerate(bits):
+            value = values[bitIndex]
+            if bit == '0' and value % 2:
+                values[bitIndex] -= 1
+            elif bit == '1' and value % 2 == 0:
+                values[bitIndex] += 1 if value == 0 else -1
+
+        for pixelIndex, location in enumerate(pixelLocations):
+            x = int(location) % width
+            y = int(location) // width
+            start = pixelIndex * 3
+            stegoImage.putpixel((x, y), tuple(values[start:start + 3]))
+
+    return stegoImage
+
+
+def extract_text(stegoImage, pls):
+    if stegoImage.mode != 'RGB':
+        raise ValueError("The stego image must be RGB.")
+    if len(pls) % 3:
+        raise ValueError("The PLS length must be a multiple of three.")
+
+    width, _ = stegoImage.size
+    decodedChars = []
+    for offset in range(0, len(pls), 3):
+        values = []
+        for location in pls[offset:offset + 3]:
+            x = int(location) % width
+            y = int(location) // width
+            values.extend(stegoImage.getpixel((x, y)))
+
+        bits = ''.join('1' if value & 1 else '0' for value in values[:8])
+        decodedChars.append(chr(int(bits, 2)))
+
+    return ''.join(decodedChars)
 
 
 def LsbEncoding(encodedText):
-    PLSgen(row, col, len(encodedText))
-    dataBits = DataListInBit(encodedText)
-    dr = 0
-    for i in range(0, len(encodedText) * 3, 3):
-        dc = 0
-        for j in range(0, 3):
-            rr = PLS[i + j] // col
-            rc = PLS[i + j] % col
-            rgb = img.getpixel((rr, rc))
-            value = []
-            idx = 0
-            for k in rgb:
-                if (k % 2 == 0 and dataBits[dr][dc] == '1'):
-                    if (k == 0):
-                        k += 1
-                    else:
-                        k -= 1
-                if (k % 2 == 1 and dataBits[dr][dc] == '0'):
-                    k -= 1
-                value.append(k)
-                idx += 1
-                dc += 1
-                if (dc >= 8):
-                    break
-            if (dc >= 8):
-                value.append(rgb[2])
-            newrgb = (value[0], value[1], value[2])
-            img.putpixel((rr, rc), newrgb)
-        dr += 1
-    img.save("images/out1.png")
+    pls = PLSgen(row, col, len(encodedText))
+    np.savetxt("pls.txt", np.array(pls), delimiter="\t")
+    stegoImage = embed_text(img, encodedText, pls)
+    stegoImage.save("images/out1.png")
     plsPassword = input("Insert Password for pls encyption :")
     key = hashlib.sha256(plsPassword.encode()).digest()
     plsh.encrypt_file(key, 'pls.txt')
@@ -74,23 +106,6 @@ def LsbDecoding():
         os.remove("out.txt")
     if os.path.exists("pls.txt.enc"):
         os.remove("pls.txt.enc")
-    decodedTextInBits = []
     stegoImage = Image.open(r"images/out1.png")
-    for i in range(0, len(pls), 3):
-        ithChar = ""
-        for j in range(0, 3):
-            rr = pls[i + j] // col
-            rc = pls[i + j] % col
-            rgb = stegoImage.getpixel((rr, rc))
-            for k in rgb:
-                if (k & 1):
-                    ithChar += '1'
-                else:
-                    ithChar += '0'
-
-        ithChar = ithChar[:-1]
-        decodedTextInBits.append((ithChar))
-    decodedText = ''
-    for i in decodedTextInBits:
-        decodedText += chr(int(i, 2))
-    return decodedText
+    pls = np.atleast_1d(pls).astype(int).tolist()
+    return extract_text(stegoImage, pls)

@@ -1,0 +1,3 @@
+scheme,ciphertext bit flipped,decryption result,tamper detected
+Repository AES-CTR,1,changed plaintext,no
+ChaCha20-Poly1305,1,rejected,yes

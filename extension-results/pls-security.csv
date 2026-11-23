@@ -1,0 +1,2 @@
+payload length (characters),embedding seed,sequential extraction,seeds searched,candidates tested,seed found,outcome
+12,42,failed,0-63,43,42,seed recovered

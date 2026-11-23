@@ -1,0 +1,2 @@
+plaintext A (known),plaintext B (target),same key and counter,ciphertext XOR = plaintext XOR,recovered B,outcome
+known demo plaintext for CTR reuse,other demo plaintext for CTR reuse,yes,yes,other demo plaintext for CTR reuse,vulnerable

@@ -41,13 +41,10 @@ _Role is one of: Reviewer, Archaeologist, Student Researcher, Reproducibility Ch
 
 | 4 | 11/21/2026 | Reproducibility Checker | The AI-assisted runner compares five images and checks text/PLS recovery | OK | yes | Four tests passed; all five images passed recovery; repeated outputs matched. The paper’s MSE/PSNR numbers still differ, and the cause is unresolved | Widyane Kasbi
 
-| 5 |
+| 5 | 11/22/2026 | Student Researcher | Compares repository AES-256 CTR with ChaCha20 and sequential with seeded-random PLS | OK | yes | Six tests passed; both ciphers recovered the message with equal output length; both PLS orders recovered the payload in all five images; tables saved in extension-results | Widyane Kasbi |
 
-| 6 |
+| 6 | 11/22/2026 | Student Researcher | Reorganized the extension into three security experiments: AES-CTR counter reuse, tamper detection compared with ChaCha20-Poly1305, and bounded recovery of a predictable PLS seed | OK | yes | Seven unit tests passed; terminal run reproduced all three findings and saved three CSV tables | Widyane Kasbi |
 
-| 7 |
-
-| 8 |
 
 ## End-of-semester summary (fill in before the final demo)
 

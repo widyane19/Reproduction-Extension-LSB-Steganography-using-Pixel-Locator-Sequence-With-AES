@@ -38,6 +38,31 @@ images have the paper's listed dimensions, but their exact pixel-by-pixel
 identity to the paper's sample images has not been verified. The paper's claim
 that decoding is impossible without the PLS was not tested by this experiment.
 
+## Security extension
+
+Run the three focused experiments from the repository folder:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest -v
+$env:REPRODUCTION_PASSWORD = 'throwaway-demo'
+.\.venv\Scripts\python.exe extension.py
+```
+
+The terminal prints the three titled sections, the values compared to reach
+each result, and a short keyword guide at the end. AES is the encryption
+algorithm; CTR (Counter) is a mode for using AES. The extension compares two
+same-length messages encrypted with the same key and fixed counter, then
+attempts to recover the second from the first. It compares AES-CTR and
+ChaCha20-Poly1305 after flipping one ciphertext bit. Finally, it compares
+sequential extraction with a seed search from 0–63 for a payload embedded using
+seed 42. That seed search knows the expected demo payload; it is not a blind
+image-only attack and does not test recovery of the paper's AES-encrypted PLS.
+
+Each result is also saved as one CSV in `extension-results/`. The experiments
+use demo data and a throwaway password only. The fixed ChaCha20-Poly1305 nonce
+is used for one message in this demonstration; production encryption needs a
+unique nonce per key.
+
 ## What is it all about ?
 
 Image steganography is the art of hiding data into images. Secret data such as messages, audio, images can be hidden inside the cover image. This is mainly achieved by hiding the data into the LSB(Least Significant Bit) of the image pixels. To improve the security of steganography, we studied data encryption with AES(Advanced Encryption Standard) and LSB based data hiding technique with advanced user-defined encrypted data distribution in pixels other than the common linear computational method of storing data in a linear form. The pixel locater sequence will contain the location of the data(in form of pixel numbers) to be encrypted/decrypted which is further encrypted with AES thus providing double encryption for data and its location stored over pixels. Steganography has many applications such as medical, military, copyright information, etc.

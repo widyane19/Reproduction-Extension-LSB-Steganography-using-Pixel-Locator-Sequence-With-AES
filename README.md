@@ -21,7 +21,7 @@
 - `test_pls_v2.py` checks the round trip, wrong password, changed image, size limit, and pixel order.
 - `compare_pls_v2.py` compares the original method with PLS v2 and saves tables in `pls-v2-results/`.
 - `reproduction-results/` and `extension-results/` contain generated images and result tables from runs.
-- `Widyane-AI-AUDIT.md` records AI assistance used for the project.
+- `Group-AI-AUDIT.md` records AI assistance used for the project.
 
 ## Run the project
 

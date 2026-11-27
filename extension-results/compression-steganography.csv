@@ -1,0 +1,6 @@
+image,original_ciphertext,compressed_ciphertext,ciphertext_saved,original_psnr,compressed_psnr,psnr_improvement,original_mse,compressed_mse,original_recovered,compressed_recovered
+in1.png,4500,288,4212,57.4024,69.3086,11.9062,0.118262,0.007625,True,True
+in2.png,4500,288,4212,62.7704,74.7494,11.9790,0.034359,0.002178,True,True
+in3.png,4500,288,4212,64.5458,76.4428,11.8970,0.022830,0.001475,True,True
+in4.png,4500,288,4212,63.3085,75.1972,11.8887,0.030355,0.001965,True,True
+in5.png,4500,288,4212,64.2781,76.1476,11.8695,0.024281,0.001579,True,True

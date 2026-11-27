@@ -8,6 +8,7 @@
 
 - **Reproduction:** Ran the paper's sample ciphertext and Pixel Locator Sequence (PLS) through five cover images. Checked recovery and compared our image MSE/PSNR measurements with the paper's reported values.
 - **Security extension:** Tested AES-CTR counter reuse, compared AES-CTR with ChaCha20-Poly1305 when ciphertext is changed, and tested sequential extraction versus searching a small PLS seed range.
+- **PLS v2:** Removed the PLS file. The pixel order is made from the password, the message is hidden as raw AES-GCM bytes instead of hex, and a wrong password or changed image is rejected.
 
 ## Project files
 
@@ -15,6 +16,9 @@
 - `test_reproduction.py` checks PLS repeatability, embedding and extraction, pixel mapping, and payload-size handling.
 - `extension.py` runs the three security experiments, prints comparison tables and findings, and saves their CSV results.
 - `test_extension.py` checks the expected result of each security experiment.
+- `pls_v2.py` hides and reveals a message without a PLS file.
+- `test_pls_v2.py` checks the round trip, wrong password, changed image, size limit, and pixel order.
+- `compare_pls_v2.py` compares the original method with PLS v2 and saves tables in `pls-v2-results/`.
 - `reproduction-results/` and `extension-results/` contain generated images and result tables from runs.
 - `Widyane-AI-AUDIT.md` records AI assistance used for the project.
 
@@ -36,6 +40,38 @@ Run the tests, reproduction, and extension:
 ```
 
 The reproduction and extension scripts prompt for a password. Use the same throwaway demo password when you want consistent runs; do not enter a real password. The paper's MSE/PSNR values are stored as comparison baselines, while this run's metrics and experiment outcomes are calculated when the scripts execute. The extension's PLS search is a bounded demonstration using a known payload; it does not test recovery of the paper's AES-encrypted PLS.
+
+## PLS v2
+
+The paper sends a PLS file next to the stego image and says the method "is not very space-efficient." PLS v2 removes that file.
+
+**Sender:**
+1. Make a random 16-byte salt and turn the password into two keys with PBKDF2: one for AES, one for the pixel order.
+2. Encrypt the message with AES-GCM. This gives the ciphertext and a tag that catches changes.
+3. Put a 4-byte length in front, so the receiver knows when to stop reading. In the original, the length of the PLS told the receiver this.
+4. Give every pixel a score with HMAC-SHA256 using the order key, and sort by score. That is the pixel order.
+5. Write the salt into the first 43 pixels in normal order, then everything else into the low bits of the pixels in the secret order. Only the image is sent.
+
+**Receiver:** reads the salt, makes the same keys and the same pixel order, reads the length, reads that many bytes, and decrypts. A wrong password or a changed image fails the AES-GCM tag check and is rejected.
+
+Run it:
+
+```powershell
+.\.venv\Scripts\python.exe compare_pls_v2.py
+```
+
+Results from one run on `in3.png` (`pls-v2-results/`). PLS v2 uses a new random salt and nonce each time, so its "values changed" number moves a little between runs:
+
+| Message (chars) | Method | Bytes hidden | Values changed | PSNR (dB) | Extra file to send |
+|---|---|---|---|---|---|
+| 53 | original | 106 | 400 | 81.07 | 8,296 bytes |
+| 53 | PLS v2 | 101 | 391 | 81.17 | 0 |
+| 5000 | original | 10,000 | 40,126 | 61.05 | 780,024 bytes |
+| 5000 | PLS v2 | 5,048 | 20,141 | 64.05 | 0 |
+
+For short messages the two are close, because PLS v2 adds 48 bytes (salt, length, nonce, tag). For longer messages PLS v2 hides about half as many bytes, because it does not use hex, so it changes about half as many values. With a wrong password the original crashed with a `UnicodeDecodeError`; PLS v2 printed a clear rejection.
+
+**Trade-offs:** the original uses two passwords and PLS v2 uses one, so if that password leaks, both the message and its location leak. The salt sits in the first 43 pixels in normal order; it is not secret, but it is always in the same place. Kumar and Maiti [2] also improve PLS generation with cryptographic techniques, so the secure pixel order is related to their work.
 
 ## Scholarly References
 

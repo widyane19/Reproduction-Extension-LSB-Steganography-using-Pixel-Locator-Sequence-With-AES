@@ -74,6 +74,18 @@ For short messages the two are close, because PLS v2 adds 48 bytes (salt, length
 
 **Trade-offs:** the original uses two passwords and PLS v2 uses one, so if that password leaks, both the message and its location leak. The salt sits in the first 43 pixels in normal order; it is not secret, but it is always in the same place. Kumar and Maiti [2] also improve PLS generation with cryptographic techniques, so the secure pixel order is related to their work.
 
+## Compression extension
+
+This separate feature compares the original pipeline with compressing the message before encryption. It runs both methods on five cover images and reports ciphertext size, recovery, MSE, and PSNR.
+
+Run it from the repository folder:
+
+```powershell
+.\.venv\Scripts\python.exe compression_extension.py
+```
+
+The script prompts for a demo password and saves its results to `extension-results/compression-steganography.csv`.
+
 ## Scholarly References
 
 - **Foundational research:** Thangadurai and Devi analyze LSB-based image steganography techniques, providing background for the LSB method used in this project [1].
@@ -84,53 +96,3 @@ For short messages the two are close, because PLS v2 adds 48 bytes (salt, length
 
 [2] S. Kumar and S. Maiti, "Improving Security of LSB Image Steganography for Pixel Locator Sequence Using Cryptographic Techniques with AES," in *2025 IEEE International Conference on Computer Vision and Machine Intelligence (CVMI)*, Rourkela, India, 2025, pp. 1-6, doi: [10.1109/CVMI66673.2025.11337562](https://doi.org/10.1109/CVMI66673.2025.11337562).
 
----
-
-## Original repository README
-
-The following repository description and illustrations are retained from the original README. Use the setup and run commands in the Group 6 section above for this project checkout.
-
-# Improved LSB Steganography
-
-> Improvised LSB Steganography technique using Pixel Locator Sequence with AES
-
-This is the implementation of our research paper based on <b>LSB Steganography</b> submitted at [Second International Conference on Cyber Computing and Communications](https://www.nitj.ac.in/icsccc2021/) arxiv preprint: [2012.02494](https://arxiv.org/abs/2012.02494).
-
-## Original Development Setup
-
-The original repository instructions were:
-
-```sh
-pip3 install Pillow pyaes hashlib numpy Cryptodome pbkdf2 binascii
-git clone https://github.com/lostmartian/Improved-LSB-Steganography.git
-python3 main.py
-```
-
-## What is it all about?
-
-Image steganography hides data, such as messages, audio, or images, inside a cover image. Least Significant Bit (LSB) methods hide data in the least significant bits of image pixels. This project combines LSB data hiding with AES encryption and a Pixel Locator Sequence (PLS) that specifies where data is embedded and recovered.
-
-<p align="center">
-  <img width="250" height="300" src="images/sample_cmd/encryption.PNG">
-  <br>
-  Encryption Procedure
-</p>
-
-<p align="center">
-  <img width="250" height="300" src="images/sample_cmd/decryption.PNG">
-  <br>
-  Decryption Procedure
-</p>
-
-## Original repository creators
-
-<b>Sahil Gangurde</b> – [@lost_martian_](https://twitter.com/lost_martian_) – sahilgangurde08@gmail.com<br>
-<b>Krishnakant Tiwari</b> – [@Iamkkant](https://twitter.com/Iamkkant) – kkant5401@gmail.com
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/fooBar`).
-3. Commit your changes (`git commit -am 'Add some fooBar'`).
-4. Push to the branch (`git push origin feature/fooBar`).
-5. Create a pull request.

@@ -16,6 +16,7 @@ SEED_SEARCH_LIMIT = 64
 
 
 def compare_nonce_reuse(password):
+    # Reusing an AES-CTR key and counter lets known plaintext reveal the other message.
     known = "known demo plaintext for CTR reuse"
     target = "other demo plaintext for CTR reuse"
     first = bytes.fromhex(aes.encrypt(known, password))
@@ -35,6 +36,7 @@ def compare_nonce_reuse(password):
 
 
 def compare_tamper_detection(password):
+    # Compare unauthenticated CTR with authenticated encryption after changing one bit.
     message = "authenticated demo message"
     ctr = bytearray.fromhex(aes.encrypt(message, password))
     ctr[0] ^= 1
@@ -59,6 +61,7 @@ def compare_tamper_detection(password):
 
 
 def test_pls_recovery():
+    # Compare sequential reading with trying a small range of possible PLS seeds.
     payload = "demo payload"
     cover = Image.new("RGB", (64, 64), color=(100, 120, 140))
     pls = lsb.PLSgen(*cover.size, len(payload), seed=DEMO_SEED)
@@ -84,6 +87,7 @@ def test_pls_recovery():
 
 
 def write_csv(path, rows):
+    # Save result dictionaries as a headered CSV table.
     with path.open("w", newline="", encoding="utf-8") as output:
         writer = csv.DictWriter(output, fieldnames=rows[0].keys())
         writer.writeheader()
@@ -91,6 +95,7 @@ def write_csv(path, rows):
 
 
 def print_table(title, rows):
+    # Calculate column widths so the results line up in the terminal.
     print(f"\n{title}")
     columns = list(rows[0])
     widths = {col: max(len(col), *(len(str(row[col])) for row in rows)) for col in columns}
@@ -101,6 +106,7 @@ def print_table(title, rows):
 
 
 def print_report(nonce_rows, integrity_rows, pls_rows):
+    # Explain what each experiment measured and what its output means.
     print("SECURITY EXTENSION RESULTS")
     print("=" * 80)
     print("1. Confidentiality: What if the AES-CTR counter is reused?")
@@ -133,6 +139,7 @@ def print_report(nonce_rows, integrity_rows, pls_rows):
 
 
 def main():
+    # Run all three demonstrations, print their results, and save each as a CSV.
     password = os.environ.get("REPRODUCTION_PASSWORD")
     if password is None:
         password = getpass.getpass("Enter a throwaway demo password: ")

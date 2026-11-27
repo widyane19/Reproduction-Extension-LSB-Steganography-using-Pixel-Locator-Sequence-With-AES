@@ -32,6 +32,7 @@ PAPER_RESULTS = {
 
 
 def round_trip_pls(pls, password):
+    # Encrypt and decrypt the PLS in temporary files, then confirm it is unchanged.
     key = hashlib.sha256(password.encode()).digest()
     with tempfile.TemporaryDirectory() as temp_dir:
         temp_path = Path(temp_dir)
@@ -50,6 +51,7 @@ def round_trip_pls(pls, password):
 
 
 def image_metrics(original, stego):
+    # Measure pixel error and convert it to PSNR for comparison with the paper.
     originalPixels = np.asarray(original, dtype=np.float64)
     stegoPixels = np.asarray(stego, dtype=np.float64)
     mse = float(np.mean((originalPixels - stegoPixels) ** 2))
@@ -58,6 +60,7 @@ def image_metrics(original, stego):
 
 
 def main():
+    # Use an environment password when supplied; otherwise ask without displaying it.
     password = os.environ.get("REPRODUCTION_PASSWORD")
     if password is None:
         password = getpass.getpass(
@@ -75,6 +78,7 @@ def main():
     rows = []
 
     for image_number in range(1, 6):
+        # Embed the paper's ciphertext, recover it, and record image-quality metrics.
         image_path = IMAGE_DIR / f"in{image_number}.png"
         with Image.open(image_path) as source:
             cover = source.convert("RGB")

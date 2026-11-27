@@ -7,21 +7,25 @@ from PIL import Image
 import PLShandler as plsh
 
 PLS = []
+# These globals support the original command-line encode/decode helpers below.
 img = Image.open(r"images/in1.png")
 [row, col] = img.size
 
 
 def DataListInBit(data):
+    # Convert each character to the 8 bits stored in the image.
     dataBits = list(format(c, '08b') for c in bytearray(data.encode('latin-1')))
     return dataBits
 
 
 def PLSgen(row, col, lenEncodedText, seed=None):
+    # Each character uses three RGB pixels to store its eight bits.
     requiredPixels = lenEncodedText * 3
     if requiredPixels > row * col:
         raise ValueError("The encoded text is too large for this image.")
 
     new = list(range(row * col))
+    # Shuffle pixel indexes so the message is spread across the image.
     rng = random.Random(seed)
     for i in range(len(new) - 1, 0, -1):
         j = rng.randrange(i + 1)
@@ -32,6 +36,7 @@ def PLSgen(row, col, lenEncodedText, seed=None):
 
 
 def embed_text(image, encodedText, pls):
+    # Work on a copy so the original cover image stays unchanged.
     if image.mode != 'RGB':
         raise ValueError("The cover image must be RGB.")
     if len(pls) != len(encodedText) * 3:
@@ -42,6 +47,7 @@ def embed_text(image, encodedText, pls):
     dataBits = DataListInBit(encodedText)
 
     for charIndex, bits in enumerate(dataBits):
+        # Read the three selected pixels, then set their low bits to the character.
         pixelLocations = pls[charIndex * 3:charIndex * 3 + 3]
         pixels = []
         for location in pixelLocations:
@@ -67,6 +73,7 @@ def embed_text(image, encodedText, pls):
 
 
 def extract_text(stegoImage, pls):
+    # Read each character's bits from the same three pixels used during embedding.
     if stegoImage.mode != 'RGB':
         raise ValueError("The stego image must be RGB.")
     if len(pls) % 3:
@@ -88,6 +95,7 @@ def extract_text(stegoImage, pls):
 
 
 def LsbEncoding(encodedText):
+    # Embed the text, then encrypt the pixel-location list with a password-derived key.
     pls = PLSgen(row, col, len(encodedText))
     np.savetxt("pls.txt", np.array(pls), delimiter="\t")
     stegoImage = embed_text(img, encodedText, pls)
@@ -98,6 +106,7 @@ def LsbEncoding(encodedText):
 
 
 def LsbDecoding():
+    # Decrypt the pixel locations first, then use them to read the hidden text.
     plspassword = input("Insert Password for pls decryption :")
     key = hashlib.sha256(plspassword.encode()).digest()
     plsh.decrypt_file(key, 'pls.txt.enc', 'out.txt')

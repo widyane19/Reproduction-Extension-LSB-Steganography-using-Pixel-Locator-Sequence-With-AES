@@ -10,6 +10,8 @@
 - **Security extension:** Tested AES-CTR counter reuse, compared AES-CTR with ChaCha20-Poly1305 when ciphertext is changed, and tested sequential extraction versus searching a small PLS seed range.
 - **PLS v2:** Removed the PLS file. The pixel order is made from the password, the message is hidden as raw AES-GCM bytes instead of hex, and a wrong password or changed image is rejected.
 
+**Compression Extension:** Tested the difference in storage between original message vs. compressing original image and then running the same pipeline to see if there is a difference in storage and accuracy. 
+
 ## Project files
 
 - `reproduce.py` runs the five-image reproduction, checks message and PLS recovery, calculates MSE/PSNR, and saves output images and a results CSV.

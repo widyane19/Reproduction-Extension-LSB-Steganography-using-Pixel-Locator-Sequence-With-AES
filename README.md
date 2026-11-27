@@ -8,9 +8,8 @@
 
 - **Reproduction:** Ran the paper's sample ciphertext and Pixel Locator Sequence (PLS) through five cover images. Checked recovery and compared our image MSE/PSNR measurements with the paper's reported values.
 - **Security extension:** Tested AES-CTR counter reuse, compared AES-CTR with ChaCha20-Poly1305 when ciphertext is changed, and tested sequential extraction versus searching a small PLS seed range.
+- **Compression Extension:** Tested the difference in storage between original message vs. compressing original image and then running the same pipeline to see if there is a difference in storage and accuracy.
 - **PLS v2:** Removed the PLS file. The pixel order is made from the password, the message is hidden as raw AES-GCM bytes instead of hex, and a wrong password or changed image is rejected.
-
-**Compression Extension:** Tested the difference in storage between original message vs. compressing original image and then running the same pipeline to see if there is a difference in storage and accuracy. 
 
 ## Project files
 

@@ -1,0 +1,11 @@
+image,message chars,method,bytes hidden,pixels used,values changed,MSE,PSNR (dB),extra file to send (bytes)
+in1.png,53,original,106,318,442,0.002910,73.49,8296
+in1.png,53,PLS v2,101,270,414,0.002726,73.78,0
+in2.png,53,original,106,318,394,0.000748,79.39,8296
+in2.png,53,PLS v2,101,270,374,0.000710,79.62,0
+in3.png,53,original,106,318,400,0.000509,81.07,8296
+in3.png,53,PLS v2,101,270,409,0.000520,80.97,0
+in4.png,53,original,106,318,406,0.000688,79.75,8296
+in4.png,53,PLS v2,101,270,417,0.000707,79.64,0
+in5.png,53,original,106,318,432,0.000586,80.45,8296
+in5.png,53,PLS v2,101,270,394,0.000534,80.85,0

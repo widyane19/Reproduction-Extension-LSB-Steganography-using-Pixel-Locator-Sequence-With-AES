@@ -6,7 +6,7 @@ CS 4379H Cryptography, Fall 2026
 
 **Paper:** LSB Steganography Using Pixel Locator Sequence with AES
 
-**AI assistant(s) used (name and version, e.g., "ChatGPT (GPT-5), Claude (Sonnet 5)"):** Gemini (Flash3.6)
+**AI assistant(s) used (name and version, e.g., "ChatGPT (GPT-5), Claude (Sonnet 5)"):** Gemini (Flash3.6), Claude (Opus 5.5)
 
 ## How to use this log
 
@@ -44,6 +44,10 @@ _Role is one of: Reviewer, Archaeologist, Student Researcher, Reproducibility Ch
 | 5 | 11/22/2026 | Student Researcher | Compares repository AES-256 CTR with ChaCha20 and sequential with seeded-random PLS | OK | yes | Six tests passed; both ciphers recovered the message with equal output length; both PLS orders recovered the payload in all five images; tables saved in extension-results | Widyane Kasbi |
 
 | 6 | 11/22/2026 | Student Researcher | Reorganized the extension into three security experiments: AES-CTR counter reuse, tamper detection compared with ChaCha20-Poly1305, and bounded recovery of a predictable PLS seed | OK | yes | Seven unit tests passed; terminal run reproduced all three findings and saved three CSV tables | Widyane Kasbi |
+
+| 7 | 11/27/2026 | Student Researcher | Claimed that hiding data in a pixel order generated from a secret key, instead of sending the PLS, is a known technique in steganography research | OK | yes | Zhang and Li, "On the Unicity Distance of Stego Key" (arXiv:cs/0504083, 2005) describe LSB steganography where pixels are chosen by "a Pseudo-Random Number Generator (PRNG) which is seeded with a stego-key" | Sid Singh |
+
+| 8 | 11/27/2026 | Student Researcher | AI-assisted PLS v2: pixel order made from the password, length header, AES-GCM raw bytes instead of hex | OK | yes | Seven unit tests passed; comparison run showed the PLS file going from 8,296 bytes to 0 and a wrong password being rejected instead of crashing | Sid Singh |
 
 
 ## End-of-semester summary (fill in before the final demo)

@@ -1,0 +1,9 @@
+image,message chars,method,bytes hidden,pixels used,values changed,MSE,PSNR (dB),extra file to send (bytes)
+in3.png,53,original,106,318,400,0.000509,81.07,8296
+in3.png,53,PLS v2,101,270,391,0.000497,81.17,0
+in3.png,500,original,1000,3000,4023,0.005116,71.04,78024
+in3.png,500,PLS v2,548,1462,2232,0.002838,73.60,0
+in3.png,2000,original,4000,12000,16008,0.020355,65.04,312024
+in3.png,2000,PLS v2,2048,5462,8039,0.010222,68.04,0
+in3.png,5000,original,10000,30000,40126,0.051023,61.05,780024
+in3.png,5000,PLS v2,5048,13462,20141,0.025611,64.05,0

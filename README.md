@@ -37,6 +37,16 @@ Run the tests, reproduction, and extension:
 
 The reproduction and extension scripts prompt for a password. Use the same throwaway demo password when you want consistent runs; do not enter a real password. The paper's MSE/PSNR values are stored as comparison baselines, while this run's metrics and experiment outcomes are calculated when the scripts execute. The extension's PLS search is a bounded demonstration using a known payload; it does not test recovery of the paper's AES-encrypted PLS.
 
+## Scholarly References
+
+- **Foundational research:** Thangadurai and Devi analyze LSB-based image steganography techniques, providing background for the LSB method used in this project [1].
+- **Contemporary related work:** Kumar and Maiti present a later PLS-and-AES method that adds cryptographically secure sequence generation and key exchange, providing a technical comparison to this paper [2].
+
+
+[1] K. Thangadurai and G. S. Devi, "An analysis of LSB based image steganography techniques," in *2014 International Conference on Computer Communication and Informatics*, Coimbatore, India, 2014, pp. 1-4, doi: [10.1109/ICCCI.2014.6921751](https://doi.org/10.1109/ICCCI.2014.6921751).
+
+[2] S. Kumar and S. Maiti, "Improving Security of LSB Image Steganography for Pixel Locator Sequence Using Cryptographic Techniques with AES," in *2025 IEEE International Conference on Computer Vision and Machine Intelligence (CVMI)*, Rourkela, India, 2025, pp. 1-6, doi: [10.1109/CVMI66673.2025.11337562](https://doi.org/10.1109/CVMI66673.2025.11337562).
+
 ---
 
 ## Original repository README
